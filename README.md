@@ -21,7 +21,7 @@ La app se publica automáticamente al hacer push a `main`.
 2. En **Build and deployment** → **Source**, elegí **GitHub Actions**
 3. Hacé push a `main` o ejecutá el workflow **Deploy to GitHub Pages** manualmente
 
-En la **última página** del álbum aparece un **código QR** con el enlace para que tus compañeros abran el álbum desde el celular.
+En la **última página** del álbum aparece un **código QR** que apunta al repositorio: https://github.com/FacundoAbba/album_neuronic
 
 ## Assets
 

@@ -33,7 +33,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_SITE_URL: https://facundoabba.github.io/album_neuronic/
+          VITE_QR_URL: https://github.com/FacundoAbba/album_neuronic
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

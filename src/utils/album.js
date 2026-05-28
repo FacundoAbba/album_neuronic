@@ -12,15 +12,11 @@ export const ALBUM_ASSETS = {
   fondo: `${assetBase}fondo.png`,
 }
 
-/** URL pública del álbum (GitHub Pages) */
+/** URL del repositorio (código QR en la última página) */
+export const ALBUM_REPO_URL = 'https://github.com/FacundoAbba/album_neuronic'
+
 export function getAlbumShareUrl() {
-  if (import.meta.env.VITE_SITE_URL) {
-    return import.meta.env.VITE_SITE_URL
-  }
-  if (typeof window !== 'undefined') {
-    return new URL(import.meta.env.BASE_URL, window.location.href).href
-  }
-  return 'https://facundoabba.github.io/album_neuronic/'
+  return import.meta.env.VITE_QR_URL || ALBUM_REPO_URL
 }
 
 export function getFullCollection() {
