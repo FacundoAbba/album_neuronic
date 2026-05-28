@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  @apply bg-slate-900 font-sans antialiased;
+}
+
+.album-app {
+  height: 100dvh;
+  max-height: 100dvh;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+@supports not (height: 100dvh) {
+  .album-app {
+    height: 100vh;
+    max-height: 100vh;
+  }
+}
+
+/* Libro compacto y centrado (no ocupa todo el ancho en pantallas grandes) */
+.album-stage {
+  position: relative;
+  width: min(
+    calc(100vw - 2.5rem - env(safe-area-inset-left) - env(safe-area-inset-right)),
+    28rem,
+    calc(
+      (100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 0.5rem) *
+        0.72
+    )
+  );
+  aspect-ratio: 3 / 4;
+  height: auto;
+  max-height: calc(
+    100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 0.5rem
+  );
+  margin-inline: auto;
+}
+
+@media (max-width: 640px) {
+  .album-stage {
+    width: min(
+      calc(100vw - 2rem - env(safe-area-inset-left) - env(safe-area-inset-right)),
+      22rem
+    );
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .album-stage {
+    width: min(
+      calc(100vw - 3rem - env(safe-area-inset-left) - env(safe-area-inset-right)),
+      calc(
+        (100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 0.5rem) *
+          0.5
+      )
+    );
+    max-height: calc(
+      100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 0.25rem
+    );
+  }
+}
+
+.album-perspective {
+  perspective: 1400px;
+}
+
+.album-page-layer {
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.album-page-idle {
+  animation: album-enter 0.45s ease-out forwards;
+}
+
+@keyframes album-enter {
+  0% {
+    transform: rotateY(12deg);
+    opacity: 0.4;
+  }
+  100% {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+.album-page-turn-next {
+  animation: album-turn-next 0.65s ease-in forwards;
+}
+
+.album-page-turn-prev {
+  animation: album-turn-prev 0.65s ease-in forwards;
+}
+
+@keyframes album-turn-next {
+  0% {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+  45% {
+    transform: rotateY(-55deg) scale(0.98);
+    opacity: 0.85;
+  }
+  100% {
+    transform: rotateY(-88deg) scale(0.96);
+    opacity: 0;
+  }
+}
+
+@keyframes album-turn-prev {
+  0% {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+  45% {
+    transform: rotateY(55deg) scale(0.98);
+    opacity: 0.85;
+  }
+  100% {
+    transform: rotateY(88deg) scale(0.96);
+    opacity: 0;
+  }
+}
