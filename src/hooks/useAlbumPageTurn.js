@@ -1,18 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { getTotalPages } from '../utils/album'
 
-const COVER_HOLD_MS = 2800
-const PAGE_HOLD_MS = 2400
+const PAGE_HOLD_MS = 10000
 const TURN_DURATION_MS = 650
 
-export function useAlbumPageTurn({ autoPlayOnMount = true } = {}) {
+export function useAlbumPageTurn() {
   const totalStickerPages = getTotalPages()
   const totalViews = totalStickerPages + 1
 
   const [viewIndex, setViewIndex] = useState(0)
   const [isTurning, setIsTurning] = useState(false)
   const [turnDirection, setTurnDirection] = useState('next')
-  const [autoTourActive, setAutoTourActive] = useState(autoPlayOnMount)
   const isTurningRef = useRef(false)
   const holdTimerRef = useRef(null)
   const turnTimerRef = useRef(null)
@@ -41,61 +39,30 @@ export function useAlbumPageTurn({ autoPlayOnMount = true } = {}) {
     [clearTimers, totalViews],
   )
 
-  const stopAutoTour = useCallback(() => {
-    setAutoTourActive(false)
-    clearTimers()
-  }, [clearTimers])
+  const goNext = useCallback(() => {
+    const nextIndex = viewIndex >= totalViews - 1 ? 0 : viewIndex + 1
+    goToView(nextIndex, 'next')
+  }, [goToView, totalViews, viewIndex])
 
-  const goNext = useCallback(
-    (fromUser = false) => {
-      if (fromUser) stopAutoTour()
-      if (viewIndex < totalViews - 1) {
-        goToView(viewIndex + 1, 'next')
-      }
-    },
-    [goToView, stopAutoTour, totalViews, viewIndex],
-  )
-
-  const goPrevious = useCallback(
-    (fromUser = false) => {
-      if (fromUser) stopAutoTour()
-      if (viewIndex > 0) {
-        goToView(viewIndex - 1, 'prev')
-      }
-    },
-    [goToView, stopAutoTour, viewIndex],
-  )
-
-  const replayTour = useCallback(() => {
-    clearTimers()
-    isTurningRef.current = false
-    setIsTurning(false)
-    setViewIndex(0)
-    setAutoTourActive(true)
-  }, [clearTimers])
-
-  useEffect(() => {
-    if (!autoTourActive || isTurning) return undefined
-
-    if (viewIndex >= totalViews - 1) {
-      holdTimerRef.current = setTimeout(() => {
-        setAutoTourActive(false)
-      }, PAGE_HOLD_MS)
-      return () => {
-        if (holdTimerRef.current) clearTimeout(holdTimerRef.current)
-      }
+  const goPrevious = useCallback(() => {
+    if (viewIndex > 0) {
+      goToView(viewIndex - 1, 'prev')
     }
+  }, [goToView, viewIndex])
 
-    const holdMs = viewIndex === 0 ? COVER_HOLD_MS : PAGE_HOLD_MS
+  /* Tras 10 s en la misma vista, pasa a la siguiente (incluye tras uso manual de flechas) */
+  useEffect(() => {
+    if (isTurning) return undefined
 
     holdTimerRef.current = setTimeout(() => {
-      goToView(viewIndex + 1, 'next')
-    }, holdMs)
+      const nextIndex = viewIndex >= totalViews - 1 ? 0 : viewIndex + 1
+      goToView(nextIndex, 'next')
+    }, PAGE_HOLD_MS)
 
     return () => {
       if (holdTimerRef.current) clearTimeout(holdTimerRef.current)
     }
-  }, [autoTourActive, goToView, isTurning, totalViews, viewIndex])
+  }, [goToView, isTurning, totalViews, viewIndex])
 
   useEffect(() => () => clearTimers(), [clearTimers])
 
@@ -103,7 +70,6 @@ export function useAlbumPageTurn({ autoPlayOnMount = true } = {}) {
     viewIndex,
     isTurning,
     turnDirection,
-    autoTourActive,
     totalViews,
     totalStickerPages,
     isCover: viewIndex === 0,
@@ -111,7 +77,5 @@ export function useAlbumPageTurn({ autoPlayOnMount = true } = {}) {
     canGoNext: viewIndex < totalViews - 1 && !isTurning,
     goNext,
     goPrevious,
-    replayTour,
-    stopAutoTour,
   }
 }

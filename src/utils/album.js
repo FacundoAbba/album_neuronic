@@ -4,10 +4,23 @@ export const STICKERS_PER_PAGE = 4
 export const STORAGE_KEY = 'panini-album-collection-v2'
 export const TOTAL_STICKERS = FIGURITAS.length
 
+const assetBase = import.meta.env.BASE_URL
+
 /** Coloca tapa.png y fondo.png en la carpeta public/ del proyecto */
 export const ALBUM_ASSETS = {
-  tapa: '/tapa.png',
-  fondo: '/fondo.png',
+  tapa: `${assetBase}tapa.png`,
+  fondo: `${assetBase}fondo.png`,
+}
+
+/** URL pública del álbum (GitHub Pages) */
+export function getAlbumShareUrl() {
+  if (import.meta.env.VITE_SITE_URL) {
+    return import.meta.env.VITE_SITE_URL
+  }
+  if (typeof window !== 'undefined') {
+    return new URL(import.meta.env.BASE_URL, window.location.href).href
+  }
+  return 'https://facundoabba.github.io/album_neuronic/'
 }
 
 export function getFullCollection() {
@@ -35,7 +48,7 @@ export function getFigurita(number) {
 export function getStickerImagePath(number) {
   const figurita = getFigurita(number)
   if (!figurita) return null
-  return `/figuritas/${encodeURIComponent(figurita.file)}`
+  return `${assetBase}figuritas/${encodeURIComponent(figurita.file)}`
 }
 
 export function loadCollection() {

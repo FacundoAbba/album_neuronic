@@ -14,18 +14,18 @@ export default function App() {
     canGoNext,
     goNext,
     goPrevious,
-  } = useAlbumPageTurn({ autoPlayOnMount: true })
+  } = useAlbumPageTurn()
 
   useEffect(() => {
     saveCollection(collected)
   }, [collected])
 
   const handlePrevious = useCallback(() => {
-    goPrevious(true)
+    goPrevious()
   }, [goPrevious])
 
   const handleNext = useCallback(() => {
-    goNext(true)
+    goNext()
   }, [goNext])
 
   return (

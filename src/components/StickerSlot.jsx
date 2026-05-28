@@ -11,7 +11,7 @@ export default function StickerSlot({ number, isCollected }) {
   }, [number])
 
   return (
-    <div className="relative flex h-full w-full items-center justify-center overflow-hidden">
+    <div className="flex h-full w-full items-center justify-center">
       {imagePath && !imageError ? (
         <img
           src={imagePath}
@@ -19,14 +19,14 @@ export default function StickerSlot({ number, isCollected }) {
           loading="eager"
           decoding="async"
           className={[
-            'h-full w-full object-contain',
+            'mx-auto block max-h-[93%] max-w-[93%] object-contain object-center',
             'transition-opacity duration-300',
             isCollected ? 'opacity-100' : 'opacity-40 grayscale',
           ].join(' ')}
           onError={() => setImageError(true)}
         />
       ) : (
-        <div className="h-full w-full bg-white/20" aria-hidden />
+        <div className="h-[60%] w-[60%] rounded bg-white/20" aria-hidden />
       )}
     </div>
   )
